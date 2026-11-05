@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { supabase } from '../lib/supabase';
 import Link from 'next/link';
+import { AlertTriangle } from 'lucide-react';
 
 export default function MobileScanPage() {
   const [barcode, setBarcode] = useState('');
@@ -16,9 +17,20 @@ export default function MobileScanPage() {
   const [searching, setSearching] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [savedLocations, setSavedLocations] = useState<string[]>([]);
   const scannerRef = useRef<Html5QrcodeScanner | null>(null);
 
   useEffect(() => {
+    const fetchLocations = async () => {
+      // Opting for limit to avoid fetching too many locations
+      const { data } = await supabase.from('inventory_logs').select('location').limit(200);
+      if (data) {
+        const uniqueLocs = Array.from(new Set(data.map((item) => item.location).filter(Boolean)));
+        setSavedLocations(uniqueLocs as string[]);
+      }
+    };
+    fetchLocations();
+
     const savedName = localStorage.getItem('stocki_counter_name');
     if (savedName) setCounterName(savedName);
 
@@ -31,7 +43,7 @@ export default function MobileScanPage() {
     scanner.render(
       (decodedText) => {
         setBarcode(decodedText);
-        if (navigator.vibrate) navigator.vibrate(100);
+        if (navigator.vibrate) navigator.vibrate([200]);
       },
       () => {}
     );
@@ -193,7 +205,8 @@ export default function MobileScanPage() {
           <div className="bg-amber-50 border-2 border-amber-400 text-amber-900 p-4 rounded-2xl shadow-sm space-y-2">
             <div className="flex items-center justify-between">
               <span className="font-extrabold text-sm flex items-center gap-1">
-                ⚠️ تنبيه: هذا العنصر تم جرده من قبل!
+                <AlertTriangle className="w-4 h-4 text-amber-600" />
+                تنبيه: هذا العنصر تم جرده من قبل!
               </span>
               <span className="text-xs bg-amber-200 text-amber-900 px-2 py-0.5 rounded-md font-bold">
                 مسجل مسبقاً
@@ -262,11 +275,17 @@ export default function MobileScanPage() {
             <input
               type="text"
               required
+              list="locations-list"
               placeholder="مثلاً: المخزن 1 - الرف B2"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               className="w-full px-3 py-2.5 border rounded-xl text-slate-800 text-sm font-bold focus:ring-2 focus:ring-indigo-500 outline-none"
             />
+            <datalist id="locations-list">
+              {savedLocations.map((loc) => (
+                <option key={loc} value={loc} />
+              ))}
+            </datalist>
           </div>
 
           <div>
