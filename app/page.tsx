@@ -190,32 +190,32 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/80">
+    <div className="min-h-screen bg-slate-50">
       {/* Top Navbar */}
-      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200/80">
+      <header className="sticky top-0 z-30 glass shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 to-blue-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-blue-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 transform transition hover:scale-105">
               <Layers className="w-6 h-6" />
             </div>
             <div>
-              <div className="flex items-center gap-2.5">
-                <h1 className="text-2xl font-extrabold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+              <div className="flex items-center gap-3">
+                <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
                   Stocki
                 </h1>
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100/80 text-emerald-700 border border-emerald-200 shadow-sm">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                   مباشر
                 </span>
               </div>
-              <p className="text-xs text-slate-500 font-medium">المنصة الذكية للجرد الميداني ومراقبة المخزون</p>
+              <p className="text-xs text-slate-500 font-medium mt-0.5">المنصة الذكية للجرد الميداني ومراقبة المخزون</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-3">
             <button
               onClick={() => setShowUserModal(!showUserModal)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 shadow-xs transition cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 shadow-sm transition-all cursor-pointer"
             >
               <UserPlus className="w-4 h-4 text-indigo-600" />
               <span className="hidden sm:inline">إضافة عامل</span>
@@ -223,7 +223,7 @@ export default function Dashboard() {
 
             <button
               onClick={exportToExcel}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 shadow-sm transition-all cursor-pointer"
             >
               <Download className="w-4 h-4" />
               <span className="hidden sm:inline">تصدير Excel</span>
@@ -231,7 +231,7 @@ export default function Dashboard() {
 
             <Link
               href="/scan"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md shadow-indigo-500/20 transition"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md shadow-indigo-500/20 transition-all transform hover:-translate-y-0.5"
             >
               <ScanLine className="w-4 h-4" />
               <span>شاشة السكان</span>
@@ -239,9 +239,9 @@ export default function Dashboard() {
 
             <Link
               href="/login"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all"
             >
-              <ShieldCheck className="w-4 h-4 text-slate-600" />
+              <ShieldCheck className="w-4 h-4" />
               <span className="hidden md:inline">دخول العمال</span>
             </Link>
           </div>
@@ -251,54 +251,55 @@ export default function Dashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         {/* نافذة إضافة عامل جديد */}
         {showUserModal && (
-          <div className="bg-white rounded-2xl p-6 shadow-md border border-indigo-100 animate-in fade-in duration-200">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600">
+          <div className="bg-white rounded-2xl p-6 shadow-lg shadow-indigo-100/40 border border-indigo-100 animate-in fade-in slide-in-from-top-4 duration-300">
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-indigo-50 text-indigo-600">
                   <UserPlus className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-base font-bold text-slate-800">إنشاء حساب عامل جرد (Première connexion)</h2>
-                  <p className="text-xs text-slate-500">يتم إنشاء الحساب بدون كلمة مرور، ويعينها العامل بنفسه عند أول دخول</p>
+                  <h2 className="text-lg font-extrabold text-slate-800">إنشاء حساب عامل جرد (Première connexion)</h2>
+                  <p className="text-xs text-slate-500 font-medium">يتم إنشاء الحساب بدون كلمة مرور، ويعينها العامل بنفسه عند أول دخول</p>
                 </div>
               </div>
-              <button onClick={() => setShowUserModal(false)} className="text-slate-400 hover:text-slate-600">
+              <button onClick={() => setShowUserModal(false)} className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleCreateUser} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+            <form onSubmit={handleCreateUser} className="grid grid-cols-1 md:grid-cols-3 gap-5 items-end">
               <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1.5">اسم المستخدم (Username)</label>
+                <label className="block text-sm font-bold text-slate-700 mb-2">اسم المستخدم (Username)</label>
                 <input
                   type="text"
                   required
                   placeholder="مثلاً: mohamed"
                   value={newUsername}
                   onChange={(e) => setNewUsername(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1.5">الاسم الكامل للعامل</label>
+                <label className="block text-sm font-bold text-slate-700 mb-2">الاسم الكامل للعامل</label>
                 <input
                   type="text"
                   required
                   placeholder="مثلاً: محمد أمين"
                   value={newFullName}
                   onChange={(e) => setNewFullName(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                 />
               </div>
               <button
                 type="submit"
-                className="w-full py-2.5 px-6 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-sm transition cursor-pointer"
+                className="w-full py-3 px-6 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-sm shadow-md transition-all cursor-pointer transform hover:-translate-y-0.5"
               >
                 + تفعيل وإنشاء الحساب
               </button>
             </form>
             {userMsg && (
-              <div className="mt-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold">
+              <div className="mt-5 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-bold flex items-center gap-2">
+                <Check className="w-5 h-5 text-emerald-600" />
                 {userMsg}
               </div>
             )}
@@ -306,71 +307,73 @@ export default function Dashboard() {
         )}
 
         {/* KPI Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow flex items-center justify-between group">
             <div>
-              <p className="text-xs font-bold text-slate-500">إجمالي السلع المجرودة</p>
-              <p className="text-3xl font-extrabold text-slate-900 mt-1">{totalItems}</p>
-              <span className="text-[11px] text-slate-400 font-medium">سطر جرد مسجل</span>
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">إجمالي السلع المجرودة</p>
+              <p className="text-4xl font-extrabold text-slate-900 mt-2">{totalItems}</p>
+              <span className="text-xs text-slate-400 font-medium inline-block mt-1">سطر جرد مسجل</span>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
-              <Package className="w-6 h-6" />
+            <div className="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              <Package className="w-7 h-7" />
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow flex items-center justify-between group">
             <div>
-              <p className="text-xs font-bold text-slate-500">مجموع الكميات المحسوبة</p>
-              <p className="text-3xl font-extrabold text-indigo-600 mt-1">{totalQuantity}</p>
-              <span className="text-[11px] text-slate-400 font-medium">إجمالي القطع في المخزن</span>
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">الكميات المحسوبة</p>
+              <p className="text-4xl font-extrabold text-blue-600 mt-2">{totalQuantity}</p>
+              <span className="text-xs text-slate-400 font-medium inline-block mt-1">إجمالي القطع بالمخزن</span>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
-              <Activity className="w-6 h-6" />
+            <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              <Activity className="w-7 h-7" />
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow flex items-center justify-between group">
             <div>
-              <p className="text-xs font-bold text-slate-500">القائمون بالجرد</p>
-              <p className="text-3xl font-extrabold text-emerald-600 mt-1">{workersList.length}</p>
-              <span className="text-[11px] text-slate-400 font-medium">أعضاء الفريق النشطين</span>
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">القائمون بالجرد</p>
+              <p className="text-4xl font-extrabold text-emerald-600 mt-2">{workersList.length}</p>
+              <span className="text-xs text-slate-400 font-medium inline-block mt-1">أعضاء الفريق النشطين</span>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-              <Users className="w-6 h-6" />
+            <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              <Users className="w-7 h-7" />
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow flex items-center justify-between group">
             <div>
-              <p className="text-xs font-bold text-slate-500">المواقع والرفوف</p>
-              <p className="text-3xl font-extrabold text-amber-600 mt-1">{locationsList.length}</p>
-              <span className="text-[11px] text-slate-400 font-medium">مناطق التخزين المجرودة</span>
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">المواقع والرفوف</p>
+              <p className="text-4xl font-extrabold text-amber-600 mt-2">{locationsList.length}</p>
+              <span className="text-xs text-slate-400 font-medium inline-block mt-1">مناطق التخزين المجرودة</span>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center">
-              <MapPin className="w-6 h-6" />
+            <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              <MapPin className="w-7 h-7" />
             </div>
           </div>
         </div>
 
         {/* Filters & Search Bar */}
-        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
           <div className="md:col-span-6 relative">
-            <Search className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-5 h-5 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="ابحث باسم السلعة أو رقم الباركود..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pr-10 pl-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition"
+              className="w-full pr-12 pl-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
             />
           </div>
 
-          <div className="md:col-span-3 flex items-center gap-2">
-            <Filter className="w-4 h-4 text-slate-400 shrink-0" />
+          <div className="md:col-span-3 relative">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+              <Filter className="w-4 h-4" />
+            </div>
             <select
               value={selectedWorker}
               onChange={(e) => setSelectedWorker(e.target.value)}
-              className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none"
+              className="w-full pr-10 pl-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:bg-white focus:ring-2 focus:ring-indigo-500 appearance-none outline-none cursor-pointer transition-all"
             >
               <option value="all">كل العمال ({workersList.length})</option>
               {workersList.map((w) => (
@@ -379,12 +382,14 @@ export default function Dashboard() {
             </select>
           </div>
 
-          <div className="md:col-span-3 flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
+          <div className="md:col-span-3 relative">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+              <MapPin className="w-4 h-4" />
+            </div>
             <select
               value={selectedLocation}
               onChange={(e) => setSelectedLocation(e.target.value)}
-              className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none"
+              className="w-full pr-10 pl-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:bg-white focus:ring-2 focus:ring-indigo-500 appearance-none outline-none cursor-pointer transition-all"
             >
               <option value="all">كل المواقع ({locationsList.length})</option>
               {locationsList.map((loc) => (
@@ -395,16 +400,19 @@ export default function Dashboard() {
         </div>
 
         {/* Live Data Table */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-            <h3 className="font-bold text-slate-800 text-base">سجل الجرد الميداني المباشر</h3>
-            <span className="text-xs text-slate-400 font-medium">يتحدث تلقائياً عند كل عملية سكان</span>
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+          <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-white">
+            <h3 className="font-extrabold text-slate-900 text-lg flex items-center gap-2">
+              <Activity className="w-5 h-5 text-indigo-500" />
+              سجل الجرد الميداني المباشر
+            </h3>
+            <span className="text-xs text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full font-bold">يتحدث تلقائياً</span>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-right border-collapse">
               <thead>
-                <tr className="bg-slate-50/70 text-slate-500 text-xs font-bold uppercase border-b border-slate-200/80">
+                <tr className="bg-slate-50/80 text-slate-500 text-xs font-bold uppercase tracking-wider border-b border-slate-200/80">
                   <th className="py-3.5 px-6">المنتج (Article)</th>
                   <th className="py-3.5 px-6">الباركود</th>
                   <th className="py-3.5 px-6">الكمية</th>

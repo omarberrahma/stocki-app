@@ -158,20 +158,20 @@ export default function MobileScanPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-100 p-4 pb-12 font-sans" dir="rtl">
-      <div className="max-w-md mx-auto space-y-4">
-        <div className="bg-indigo-600 text-white p-4 rounded-2xl shadow-sm flex justify-between items-center">
+    <main className="min-h-screen bg-slate-50 p-4 pb-12 font-sans" dir="rtl">
+      <div className="max-w-lg mx-auto space-y-6 mt-2">
+        <div className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white p-5 rounded-3xl shadow-lg shadow-indigo-500/30 flex justify-between items-center">
           <div>
-            <h1 className="text-lg font-bold">Stocki Scanner 📱</h1>
-            <p className="text-indigo-100 text-xs">الجرد الذكي وتحديد المواقع</p>
+            <h1 className="text-xl font-extrabold tracking-tight">Stocki Scanner 📱</h1>
+            <p className="text-indigo-100 text-sm font-medium mt-1">الجرد الذكي وتحديد المواقع</p>
           </div>
-          <Link href="/login" className="bg-indigo-700 hover:bg-indigo-800 text-xs px-3 py-1.5 rounded-xl font-bold">
+          <Link href="/login" className="bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/20 text-sm px-4 py-2 rounded-xl font-bold transition-all">
             حسابي 🔐
           </Link>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
-          <label className="block text-xs font-bold text-slate-600 mb-1">القائم بالجرد الحالي:</label>
+        <div className="bg-white p-5 rounded-3xl shadow-sm border border-slate-100">
+          <label className="block text-sm font-bold text-slate-700 mb-2">القائم بالجرد الحالي:</label>
           <input
             type="text"
             placeholder="اكتب اسمك أو سجل الدخول"
@@ -180,60 +180,83 @@ export default function MobileScanPage() {
               setCounterName(e.target.value);
               localStorage.setItem('stocki_counter_name', e.target.value);
             }}
-            className="w-full px-3 py-2 border rounded-xl text-slate-800 text-sm font-bold focus:ring-2 focus:ring-indigo-500 outline-none"
+            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-base font-bold focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
           />
         </div>
 
-        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 overflow-hidden text-center">
-          <p className="text-xs text-slate-500 mb-2">وجه الكاميرا نحو الباركود:</p>
-          <div id="reader" className="w-full rounded-xl overflow-hidden"></div>
+        <div className="bg-slate-900 p-5 rounded-3xl shadow-xl shadow-slate-900/20 overflow-hidden text-center border border-slate-800">
+          <p className="text-sm font-medium text-slate-300 mb-3 flex items-center justify-center gap-2">
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+            </span>
+            وجه الكاميرا نحو الباركود
+          </p>
+          <div className="p-1 rounded-2xl bg-white/5 ring-1 ring-white/10">
+            <div id="reader" className="w-full rounded-xl overflow-hidden [&_video]:rounded-xl [&_video]:object-cover"></div>
+          </div>
         </div>
 
         {previousLog && (
-          <div className="bg-amber-50 border-2 border-amber-400 text-amber-900 p-4 rounded-2xl shadow-sm space-y-2">
+          <div className="bg-amber-50 border border-amber-200 text-amber-900 p-5 rounded-3xl shadow-sm space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
             <div className="flex items-center justify-between">
-              <span className="font-extrabold text-sm flex items-center gap-1">
-                ⚠️ تنبيه: هذا العنصر تم جرده من قبل!
+              <span className="font-extrabold text-base flex items-center gap-2">
+                <span className="text-xl">⚠️</span> تنبيه: تم جرده مسبقاً!
               </span>
-              <span className="text-xs bg-amber-200 text-amber-900 px-2 py-0.5 rounded-md font-bold">
-                مسجل مسبقاً
+              <span className="text-xs bg-amber-200/80 text-amber-900 px-3 py-1 rounded-lg font-bold border border-amber-300/50">
+                مسجل
               </span>
             </div>
-            <div className="text-xs space-y-1 bg-white/80 p-3 rounded-xl border border-amber-200">
-              <p>📦 <strong>الاسم:</strong> {previousLog.product_name}</p>
-              <p>🔢 <strong>الكمية السابقة:</strong> <span className="font-bold text-indigo-700">{previousLog.counted_quantity}</span></p>
-              <p>📍 <strong>الموقع:</strong> {previousLog.location || 'غير محدد'}</p>
-              <p>👤 <strong>أدخله:</strong> {previousLog.counted_by_name}</p>
-              <p>🕒 <strong>الوقت:</strong> {new Date(previousLog.counted_at).toLocaleString('fr-FR')}</p>
+            <div className="text-sm space-y-2 bg-white/60 backdrop-blur-sm p-4 rounded-2xl border border-amber-100">
+              <p className="flex justify-between border-b border-amber-100 pb-2">
+                <span className="text-slate-500">📦 الاسم:</span>
+                <span className="font-bold">{previousLog.product_name}</span>
+              </p>
+              <p className="flex justify-between border-b border-amber-100 pb-2">
+                <span className="text-slate-500">🔢 الكمية السابقة:</span>
+                <span className="font-extrabold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">{previousLog.counted_quantity}</span>
+              </p>
+              <p className="flex justify-between border-b border-amber-100 pb-2">
+                <span className="text-slate-500">📍 الموقع:</span>
+                <span className="font-bold">{previousLog.location || 'غير محدد'}</span>
+              </p>
+              <p className="flex justify-between border-b border-amber-100 pb-2">
+                <span className="text-slate-500">👤 أدخله:</span>
+                <span className="font-bold">{previousLog.counted_by_name}</span>
+              </p>
+              <p className="flex justify-between pt-1">
+                <span className="text-slate-500">🕒 الوقت:</span>
+                <span className="font-mono text-xs font-semibold">{new Date(previousLog.counted_at).toLocaleString('fr-FR')}</span>
+              </p>
             </div>
-            <div className="flex gap-2 pt-1">
+            <div className="flex gap-3 pt-2">
               <button
                 type="button"
                 onClick={() => setEditMode(true)}
-                className={`flex-1 py-1.5 rounded-xl text-xs font-bold border cursor-pointer ${
-                  editMode ? 'bg-amber-600 text-white border-amber-600' : 'bg-white text-amber-800 border-amber-400'
+                className={`flex-1 py-2.5 rounded-xl text-sm font-bold border transition-all cursor-pointer ${
+                  editMode ? 'bg-amber-600 text-white border-amber-600 shadow-md shadow-amber-500/20' : 'bg-white text-amber-800 border-amber-300 hover:bg-amber-100'
                 }`}
               >
-                ✏️ تعديل الكمية/الموقع
+                ✏️ تعديل
               </button>
               <button
                 type="button"
                 onClick={() => setEditMode(false)}
-                className={`flex-1 py-1.5 rounded-xl text-xs font-bold border cursor-pointer ${
-                  !editMode ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-300'
+                className={`flex-1 py-2.5 rounded-xl text-sm font-bold border transition-all cursor-pointer ${
+                  !editMode ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-500/20' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
                 }`}
               >
-                ➕ إضافة كسطر جديد
+                ➕ سطر جديد
               </button>
             </div>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 space-y-5 relative">
           <div>
-            <div className="flex justify-between items-center mb-1">
-              <label className="text-xs font-bold text-slate-600">الباركود المقروء:</label>
-              {searching && <span className="text-xs text-indigo-500">جاري الفحص...</span>}
+            <div className="flex justify-between items-center mb-2">
+              <label className="text-sm font-bold text-slate-700">الباركود المقروء:</label>
+              {searching && <span className="text-xs font-bold text-indigo-500 bg-indigo-50 px-2 py-1 rounded-md animate-pulse">جاري الفحص...</span>}
             </div>
             <input
               type="text"
@@ -241,43 +264,43 @@ export default function MobileScanPage() {
               placeholder="امسح بالكاميرا أو اكتب الكود"
               value={barcode}
               onChange={(e) => setBarcode(e.target.value)}
-              className="w-full px-3 py-2.5 bg-slate-50 border rounded-xl font-mono text-indigo-700 font-bold text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+              className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl font-mono text-indigo-700 font-bold text-base focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-600 mb-1">اسم المنتج (Article):</label>
+            <label className="block text-sm font-bold text-slate-700 mb-2">اسم المنتج (Article):</label>
             <input
               type="text"
               required
               placeholder="اسم السلعة"
               value={productName}
               onChange={(e) => setProductName(e.target.value)}
-              className="w-full px-3 py-2.5 border rounded-xl text-slate-800 text-sm font-bold focus:ring-2 focus:ring-indigo-500 outline-none"
+              className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl text-slate-900 text-base font-bold focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-600 mb-1">موقع السلعة (Emplacement):</label>
+            <label className="block text-sm font-bold text-slate-700 mb-2">موقع السلعة (Emplacement):</label>
             <input
               type="text"
               required
               placeholder="مثلاً: المخزن 1 - الرف B2"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="w-full px-3 py-2.5 border rounded-xl text-slate-800 text-sm font-bold focus:ring-2 focus:ring-indigo-500 outline-none"
+              className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl text-slate-900 text-base font-bold focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-600 mb-1">
+            <label className="block text-sm font-bold text-slate-700 mb-2">
               {editMode ? 'الكمية الجديدة (تعديل):' : 'الكمية المحسوبة:'}
             </label>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={() => setQuantity((prev) => Math.max(0, (parseFloat(prev) || 1) - 1).toString())}
-                className="w-12 h-11 bg-slate-200 text-slate-700 font-bold rounded-xl text-lg cursor-pointer"
+                className="w-14 h-14 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl text-2xl transition-colors cursor-pointer active:scale-95"
               >
                 -
               </button>
@@ -287,12 +310,12 @@ export default function MobileScanPage() {
                 step="any"
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
-                className="w-full px-3 py-2 border rounded-xl text-center text-lg font-bold text-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none"
+                className="flex-1 px-4 py-3 bg-white border-2 border-indigo-100 rounded-2xl text-center text-2xl font-extrabold text-indigo-700 focus:border-indigo-500 outline-none shadow-inner"
               />
               <button
                 type="button"
                 onClick={() => setQuantity((prev) => ((parseFloat(prev) || 0) + 1).toString())}
-                className="w-12 h-11 bg-slate-200 text-slate-700 font-bold rounded-xl text-lg cursor-pointer"
+                className="w-14 h-14 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 border border-indigo-200 font-bold rounded-2xl text-2xl transition-colors cursor-pointer active:scale-95"
               >
                 +
               </button>
@@ -300,7 +323,7 @@ export default function MobileScanPage() {
           </div>
 
           {successMessage && (
-            <div className="bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs p-3 rounded-xl text-center font-bold">
+            <div className="absolute -top-16 left-0 right-0 bg-emerald-600 text-white text-sm p-4 rounded-2xl text-center font-bold shadow-lg shadow-emerald-500/30 animate-in slide-in-from-bottom-5 fade-in duration-300 z-50">
               {successMessage}
             </div>
           )}
@@ -308,11 +331,22 @@ export default function MobileScanPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full py-3.5 text-white rounded-xl font-bold shadow-md transition text-base cursor-pointer ${
-              editMode ? 'bg-amber-600 hover:bg-amber-700' : 'bg-indigo-600 hover:bg-indigo-700'
+            className={`w-full py-4 text-white rounded-2xl font-bold text-lg shadow-lg transition-all cursor-pointer transform active:scale-[0.98] ${
+              editMode
+                ? 'bg-amber-500 hover:bg-amber-600 shadow-amber-500/30'
+                : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/30'
             }`}
           >
-            {isSubmitting ? 'جاري الحفظ...' : editMode ? 'حفظ التعديلات على العنصر ✏️' : 'تسجيل وإرسال الجرد 🚀'}
+            {isSubmitting ? (
+              <span className="flex items-center justify-center gap-2">
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                جاري الحفظ...
+              </span>
+            ) : editMode ? (
+              'حفظ التعديلات ✏️'
+            ) : (
+              'تسجيل وإرسال 🚀'
+            )}
           </button>
         </form>
       </div>
