@@ -5,14 +5,19 @@ import { Html5QrcodeScanner } from 'html5-qrcode';
 import { supabase } from '../lib/supabase';
 import Link from 'next/link';
 import { AlertTriangle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { InventoryLog } from '../lib/supabase';
 
 export default function MobileScanPage() {
+  const router = useRouter();
+  const [tenantId, setTenantId] = useState<string | null>(null);
+
   const [barcode, setBarcode] = useState('');
   const [productName, setProductName] = useState('');
   const [location, setLocation] = useState('');
   const [quantity, setQuantity] = useState('1');
   const [counterName, setCounterName] = useState('');
-  const [previousLog, setPreviousLog] = useState<any>(null);
+  const [previousLog, setPreviousLog] = useState<InventoryLog | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [searching, setSearching] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -21,9 +26,36 @@ export default function MobileScanPage() {
   const scannerRef = useRef<Html5QrcodeScanner | null>(null);
 
   useEffect(() => {
+    const userStr = localStorage.getItem('stocki_user');
+    if (!userStr) {
+      router.push('/login');
+      return;
+    }
+    const user = JSON.parse(userStr);
+    if (!user.tenant_id) {
+      // If master or no tenant, maybe redirect or allow? Let's just set it.
+      setTenantId(user.tenant_id);
+    } else {
+      setTenantId(user.tenant_id);
+    }
+
+    if (user.full_name) {
+      setCounterName(user.full_name);
+    } else {
+      const savedName = localStorage.getItem('stocki_counter_name');
+      if (savedName) setCounterName(savedName);
+    }
+  }, [router]);
+
+  useEffect(() => {
+    if (!tenantId) return;
+
     const fetchLocations = async () => {
-      // Opting for limit to avoid fetching too many locations
-      const { data } = await supabase.from('inventory_logs').select('location').limit(200);
+      const { data } = await supabase
+        .from('inventory_logs')
+        .select('location')
+        .eq('tenant_id', tenantId)
+        .limit(200);
       if (data) {
         const uniqueLocs = Array.from(new Set(data.map((item) => item.location).filter(Boolean)));
         setSavedLocations(uniqueLocs as string[]);
@@ -31,12 +63,9 @@ export default function MobileScanPage() {
     };
     fetchLocations();
 
-    const savedName = localStorage.getItem('stocki_counter_name');
-    if (savedName) setCounterName(savedName);
-
     const scanner = new Html5QrcodeScanner(
       'reader',
-      { fps: 10, qrbox: { width: 250, height: 150 }, rememberLastUsedCamera: true },
+      { fps: 15, qrbox: { width: 220, height: 220 }, rememberLastUsedCamera: true },
       false
     );
 
@@ -52,9 +81,11 @@ export default function MobileScanPage() {
     return () => {
       scanner.clear().catch(() => {});
     };
-  }, []);
+  }, [tenantId]);
 
   useEffect(() => {
+    if (!tenantId) return;
+
     const checkBarcode = async () => {
       const cleanBarcode = barcode.trim();
       if (!cleanBarcode) {
@@ -70,6 +101,7 @@ export default function MobileScanPage() {
       const { data: logData } = await supabase
         .from('inventory_logs')
         .select('*')
+        .eq('tenant_id', tenantId)
         .eq('barcode', cleanBarcode)
         .order('counted_at', { ascending: false })
         .limit(1)
@@ -87,6 +119,7 @@ export default function MobileScanPage() {
         const { data: prodData } = await supabase
           .from('products')
           .select('*')
+          .eq('tenant_id', tenantId)
           .eq('barcode', cleanBarcode)
           .maybeSingle();
 
@@ -101,10 +134,12 @@ export default function MobileScanPage() {
 
     const timer = setTimeout(checkBarcode, 300);
     return () => clearTimeout(timer);
-  }, [barcode]);
+  }, [barcode, tenantId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!tenantId) return;
+
     const cleanBarcode = barcode.trim();
     const cleanProductName = productName.trim();
     const cleanLocation = location.trim() || 'غير محدد';
@@ -117,9 +152,20 @@ export default function MobileScanPage() {
     setIsSubmitting(true);
     setSuccessMessage('');
 
+    // Make sure we have a unique combination of tenant_id and barcode in upsert.
+    // The previous implementation was: { onConflict: 'barcode' }, but with multi-tenant it is 'tenant_id, barcode'
+    // Let's first check if product exists to update, or just insert/update using onConflict
     await supabase.from('products').upsert(
-      [{ barcode: cleanBarcode, name: cleanProductName, default_location: cleanLocation }],
-      { onConflict: 'barcode' }
+      [{
+        tenant_id: tenantId,
+        barcode: cleanBarcode,
+        name: cleanProductName,
+        default_location: cleanLocation,
+        system_quantity: 0,
+        purchase_price: 0,
+        sale_price: 0
+      }],
+      { onConflict: 'tenant_id, barcode' }
     );
 
     let error = null;
@@ -134,11 +180,13 @@ export default function MobileScanPage() {
           counted_by_name: counterName,
           counted_at: new Date().toISOString(),
         })
-        .eq('id', previousLog.id);
+        .eq('id', previousLog.id)
+        .eq('tenant_id', tenantId);
       error = updateErr;
     } else {
       const { error: insertErr } = await supabase.from('inventory_logs').insert([
         {
+          tenant_id: tenantId,
           barcode: cleanBarcode,
           product_name: cleanProductName,
           counted_quantity: parseFloat(quantity),
@@ -198,7 +246,9 @@ export default function MobileScanPage() {
 
         <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 overflow-hidden text-center">
           <p className="text-xs text-slate-500 mb-2">وجه الكاميرا نحو الباركود:</p>
-          <div id="reader" className="w-full rounded-xl overflow-hidden"></div>
+          <div className="w-full rounded-xl overflow-hidden flex justify-center items-center" style={{ maxHeight: '280px' }}>
+            <div id="reader" className="w-full"></div>
+          </div>
         </div>
 
         {previousLog && (

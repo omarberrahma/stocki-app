@@ -12,6 +12,14 @@ export const metadata: Metadata = {
   description: "منصة الجرد الميداني المباشر وتتبع السلع بالباركود",
 };
 
+export const viewport: import("next").Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{

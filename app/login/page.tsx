@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '../lib/supabase';
+import { supabase, AppUser } from '../lib/supabase';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -10,7 +10,7 @@ export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [userRecord, setUserRecord] = useState<any>(null);
+  const [userRecord, setUserRecord] = useState<AppUser | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
