@@ -1,5 +1,14 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## روابط الدخول (Access Links)
+
+- **المدير العام (Master):** [`/`](http://localhost:3000/) - يمكنه إدارة جميع المتاجر (Tenants) ومتابعة الإحصائيات العامة.
+- **مدير المتجر (Admin):** [`/`](http://localhost:3000/) - يمكنه إدارة العمال لديه واستيراد/تصدير المنتجات من إكسيل (يتم توجيهه تلقائياً بعد تسجيل الدخول).
+- **العامل / ماسح الباركود (Auditor):** [`/scan`](http://localhost:3000/scan) - واجهة الجرد والموبايل المقفلة للكاميرا.
+
+جميع المستخدمين يمكنهم تسجيل الدخول من خلال صفحة الدخول:
+- **صفحة تسجيل الدخول (Login):** [`/login`](http://localhost:3000/login)
+
 ## Getting Started
 
 First, run the development server:
