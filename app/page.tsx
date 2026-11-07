@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { AppUser } from './lib/supabase';
+import ReactBarcode from 'react-barcode';
 
 interface InventoryLog {
   id: string;
@@ -54,7 +55,11 @@ export default function Dashboard() {
   const [activeTenantId, setActiveTenantId] = useState<string | null>(null);
 
   // Dashboard Tabs
-  const [activeTab, setActiveTab] = useState<'logs' | 'discrepancy' | 'management'>('logs');
+  const [activeTab, setActiveTab] = useState<'logs' | 'discrepancy' | 'management' | 'products'>('logs');
+
+  // Pagination for products
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   // Search & Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -356,6 +361,7 @@ export default function Dashboard() {
         <div className="flex gap-2 border-b border-slate-200">
           <button onClick={() => setActiveTab('logs')} className={`px-4 py-2 font-bold text-sm ${activeTab === 'logs' ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-slate-500'}`}>سجل الجرد</button>
           <button onClick={() => setActiveTab('discrepancy')} className={`px-4 py-2 font-bold text-sm ${activeTab === 'discrepancy' ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-slate-500'}`}>الفروقات (Écart)</button>
+          <button onClick={() => setActiveTab('products')} className={`px-4 py-2 font-bold text-sm ${activeTab === 'products' ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-slate-500'}`}>قائمة المنتجات</button>
           <button onClick={() => setActiveTab('management')} className={`px-4 py-2 font-bold text-sm ${activeTab === 'management' ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-slate-500'}`}>الإدارة</button>
         </div>
 
@@ -387,6 +393,69 @@ export default function Dashboard() {
                 </table>
               </div>
            </div>
+        )}
+
+        {activeTab === 'products' && (
+          <div className="bg-white rounded-2xl border border-slate-200 p-4">
+            <h3 className="font-bold mb-4">قائمة المنتجات (Products List)</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-right text-sm">
+                <thead className="bg-slate-50">
+                  <tr>
+                    <th className="p-3">المنتج</th>
+                    <th className="p-3">Code Article</th>
+                    <th className="p-3">Code à barre</th>
+                    <th className="p-3">التصنيف</th>
+                    <th className="p-3">الموقع</th>
+                    <th className="p-3">كمية النظام</th>
+                    <th className="p-3">سعر الشراء</th>
+                    <th className="p-3">سعر البيع</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {products.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((product, i) => (
+                    <tr key={i} className="border-t border-slate-100">
+                      <td className="p-3 font-bold">{product.name}</td>
+                      <td className="p-3">{product.barcode}</td>
+                      <td className="p-3">
+                        <div className="bg-white p-2 inline-block rounded border border-slate-200">
+                           <ReactBarcode value={product.barcode} width={1.5} height={40} displayValue={false} margin={0} />
+                        </div>
+                      </td>
+                      <td className="p-3">{product.category || '-'}</td>
+                      <td className="p-3">{product.default_location || '-'}</td>
+                      <td className="p-3"><span className="bg-indigo-50 text-indigo-700 px-2 py-1 rounded-lg font-bold">{product.system_quantity}</span></td>
+                      <td className="p-3">{product.purchase_price}</td>
+                      <td className="p-3">{product.sale_price}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pagination Controls */}
+            {products.length > itemsPerPage && (
+              <div className="flex justify-between items-center mt-4 border-t border-slate-100 pt-4">
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg disabled:opacity-50 font-bold"
+                >
+                  السابق
+                </button>
+                <span className="text-sm font-bold text-slate-600">
+                  صفحة {currentPage} من {Math.ceil(products.length / itemsPerPage)}
+                </span>
+                <button
+                  disabled={currentPage === Math.ceil(products.length / itemsPerPage)}
+                  onClick={() => setCurrentPage(p => Math.min(Math.ceil(products.length / itemsPerPage), p + 1))}
+                  className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg disabled:opacity-50 font-bold"
+                >
+                  التالي
+                </button>
+              </div>
+            )}
+          </div>
         )}
 
         {activeTab === 'discrepancy' && (
