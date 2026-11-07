@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Html5QrcodeScanner } from 'html5-qrcode';
+import { Html5Qrcode } from 'html5-qrcode';
 import { supabase } from '../lib/supabase';
 import Link from 'next/link';
 import { AlertTriangle } from 'lucide-react';
@@ -23,7 +23,8 @@ export default function MobileScanPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [savedLocations, setSavedLocations] = useState<string[]>([]);
-  const scannerRef = useRef<Html5QrcodeScanner | null>(null);
+  const [isFlashOn, setIsFlashOn] = useState(false);
+  const scannerRef = useRef<Html5Qrcode | null>(null);
 
   useEffect(() => {
     const userStr = localStorage.getItem('stocki_user');
@@ -63,25 +64,44 @@ export default function MobileScanPage() {
     };
     fetchLocations();
 
-    const scanner = new Html5QrcodeScanner(
-      'reader',
-      { fps: 15, qrbox: { width: 220, height: 220 }, rememberLastUsedCamera: true },
-      false
-    );
+    const html5QrCode = new Html5Qrcode('reader');
+    scannerRef.current = html5QrCode;
 
-    scanner.render(
+    html5QrCode.start(
+      { facingMode: 'environment' },
+      { fps: 15, qrbox: { width: 220, height: 220 } },
       (decodedText) => {
         setBarcode(decodedText);
         if (navigator.vibrate) navigator.vibrate([200]);
       },
-      () => {}
-    );
+      () => {} // ignore errors (like no qr code found in frame)
+    ).catch((err) => {
+      console.error('Failed to start scanner', err);
+    });
 
-    scannerRef.current = scanner;
     return () => {
-      scanner.clear().catch(() => {});
+      if (scannerRef.current) {
+        // Html5Qrcode uses stop() then clear()
+        scannerRef.current.stop().then(() => {
+          scannerRef.current?.clear();
+        }).catch(() => {});
+      }
     };
   }, [tenantId]);
+
+  const toggleFlash = async () => {
+    if (scannerRef.current && scannerRef.current.getState() === 2 /* SCANNING */) {
+      try {
+        await scannerRef.current.applyVideoConstraints({
+          advanced: [{ torch: !isFlashOn }]
+        });
+        setIsFlashOn(!isFlashOn);
+      } catch (err) {
+        console.error('Failed to toggle flash', err);
+        alert('فلاش الكاميرا غير مدعوم في هذا الجهاز أو المتصفح');
+      }
+    }
+  };
 
   useEffect(() => {
     if (!tenantId) return;
@@ -245,9 +265,18 @@ export default function MobileScanPage() {
         </div>
 
         <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 overflow-hidden text-center">
-          <p className="text-xs text-slate-500 mb-2">وجه الكاميرا نحو الباركود:</p>
-          <div className="w-full rounded-xl overflow-hidden flex justify-center items-center" style={{ maxHeight: '280px' }}>
-            <div id="reader" className="w-full"></div>
+          <div className="flex justify-between items-center mb-2">
+            <p className="text-xs text-slate-500">وجه الكاميرا نحو الباركود:</p>
+            <button
+              type="button"
+              onClick={toggleFlash}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${isFlashOn ? 'bg-yellow-400 text-yellow-900' : 'bg-slate-200 text-slate-700'}`}
+            >
+              {isFlashOn ? '⚡ إطفاء الفلاش' : '⚡ تشغيل الفلاش'}
+            </button>
+          </div>
+          <div className="w-full rounded-xl overflow-hidden flex justify-center items-center" style={{ minHeight: '280px', maxHeight: '350px' }}>
+            <div id="reader" className="w-full h-full"></div>
           </div>
         </div>
 
