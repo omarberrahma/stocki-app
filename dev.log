@@ -1,0 +1,17 @@
+
+> stocki-app@0.1.0 dev
+> next dev
+
+▲ Next.js 16.4.5 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+✓ Ready in 556ms
+⚠ `eslint` configuration in next.config.ts is no longer supported. See more info here: https://nextjs.org/docs/app/api-reference/cli/next#next-lint-options
+⚠ Invalid next.config.ts options detected:
+⚠     Unrecognized key(s) in object: 'eslint'
+⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
+✓ Running next.config.ts took 49ms
+
+ GET /login 200 in 1151ms (next.js: 594ms, application-code: 558ms)
+ GET /scan 200 in 488ms (next.js: 26ms, application-code: 462ms)
+[browser] Failed to toggle flash OverconstrainedError: Unsupported constraint (app/scan/page.tsx:100:17)
